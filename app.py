@@ -23,6 +23,12 @@ db.init_app(app)
 def before_request():
     print("This is before request")
     print("this is session", session)
+    g.user = None
+    if os.path.isFile("session.json"):
+        print('file is readable and exists')
+        with open('session.json', "r") as f:
+            data = json.load(f)
+            g.user = User.query.filter_by(id=data["id"]).first()
 
 
 
