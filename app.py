@@ -36,6 +36,12 @@ def index():
     return response
 
 
+@app.route('/sign-up', methods=["POST"])
+def sign_up():
+    incoming_data = request.json
+    print("this is incoming data", incoming_data)
+    return "signed in!", incoming_data
+
 
 if __name__ == "__main__":
     app.run(debug = True)
