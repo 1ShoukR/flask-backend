@@ -28,7 +28,12 @@ def before_request():
 
 @app.route("/")
 def index():
-    return "hello world"
+    db.create_all()
+    response = {
+        "name": "Rahmin",
+        "about": "Hello! I'm a full stack developer that loves python and javascript!"
+    }
+    return response
 
 
 
