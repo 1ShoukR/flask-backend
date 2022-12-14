@@ -24,11 +24,11 @@ def before_request():
     print("This is before request")
     print("this is session", session)
     g.user = None
-    # if os.path.isFile("session.json"):
-    #     print('file is readable and exists')
-    #     with open('session.json', "r") as f:
-    #         data = json.load(f)
-    #         g.user = User.query.filter_by(id=data["id"]).first()
+    if os.path.isfile("session.json"):
+        print('file is readable and exists')
+        with open('session.json', "r") as f:
+            data = json.load(f)
+            g.user = User.query.filter_by(id=data["id"]).first()
 
 
 
@@ -64,13 +64,31 @@ def sign_in():
     content = request.json
     print("this is content", content)
     signed_in_user = User.query.filter_by(username=content["username"] , password=content["password"]).first()
+    get_table_data=ToDO.query.filter_by(user_id=signed_in_user.id).all()
+    response_table_data = []
+    for data in get_table_data:
+        response_table_data.append({
+            "id": data.id,
+            "title": data.id,
+            "description": data.description,
+            "due_date": data.due_date,
+            "completed": data.completed
+        })
     found_user = {
-        "message": "loggged in succesfully!",
+        "id": signed_in_user.id,
         "username": signed_in_user.username,
         "password": signed_in_user.password
     }
-    return found_user
-
+    # Continue to get all to do data from a user and display it
+    with open("session.json", "w") as outfile:
+        outfile.write(json.dumps(found_user, indent=4))
+    returning_response = {
+        "message": "You are signed in!",
+        "username": signed_in_user.username, 
+        "password": signed_in_user.password, 
+        "toDos": response_table_data
+    }
+    return returning_response
 
 
 
