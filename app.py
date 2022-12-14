@@ -24,17 +24,17 @@ def before_request():
     print("This is before request")
     print("this is session", session)
     g.user = None
-    if os.path.isFile("session.json"):
-        print('file is readable and exists')
-        with open('session.json', "r") as f:
-            data = json.load(f)
-            g.user = User.query.filter_by(id=data["id"]).first()
+    # if os.path.isFile("session.json"):
+    #     print('file is readable and exists')
+    #     with open('session.json', "r") as f:
+    #         data = json.load(f)
+    #         g.user = User.query.filter_by(id=data["id"]).first()
 
 
 
 @app.route("/")
 def index():
-    db.create_all()
+    # db.create_all()
     response = {
         "name": "Rahmin",
         "about": "Hello! I'm a full stack developer that loves python and javascript!"
@@ -47,6 +47,16 @@ def sign_up():
     incoming_data = request.json
     print("this is incoming data", incoming_data)
     return "signed in!", incoming_data
+
+
+@app.route("/sign-in", methods=["POST"])
+@cross_origin()
+def sign_in():
+    return "This is sign in route"
+
+
+
+
 
 
 if __name__ == "__main__":
