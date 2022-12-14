@@ -46,13 +46,30 @@ def index():
 def sign_up():
     incoming_data = request.json
     print("this is incoming data", incoming_data)
-    return "signed in!", incoming_data
+    create_new_user = User(username = incoming_data["username"], password = incoming_data["password"])
+    db.session.add(create_new_user)
+    db.session.commit()
+    returning_data = {
+        "message": "Account has been created!",
+        "username": create_new_user.username,
+        "password": create_new_user.password
+    }
+    return returning_data
 
 
 @app.route("/sign-in", methods=["POST"])
 @cross_origin()
 def sign_in():
-    return "This is sign in route"
+    print("this is request", request)
+    content = request.json
+    print("this is content", content)
+    signed_in_user = User.query.filter_by(username=content["username"] , password=content["password"]).first()
+    found_user = {
+        "message": "loggged in succesfully!",
+        "username": signed_in_user.username,
+        "password": signed_in_user.password
+    }
+    return found_user
 
 
 
